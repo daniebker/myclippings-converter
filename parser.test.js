@@ -1,72 +1,77 @@
-const fs = require('fs');
-const parse = require('./parser');
-const axios = require('axios');
+const fs = require("fs");
+const parse = require("./parser");
+const axios = require("axios");
 
-jest.mock('axios');
+jest.mock("axios");
 
-describe('MyClippings parser should', () => {
+describe("MyClippings parser should", () => {
   let myClippings;
 
-  axios.get.mockImplementation(() => Promise.resolve({data:{docs:[]}}))
+  axios.get.mockImplementation(() => Promise.resolve({ data: { docs: [] } }));
 
   beforeEach(() => {
-    myClippings = fs.readFileSync('My Clippings.txt', 'utf8');
+    myClippings = fs.readFileSync("My Clippings.txt", "utf8");
   });
 
-  test('split clippings removing empty ones', async () => {
+  test("split clippings removing empty ones", async () => {
     const books = await parse(myClippings);
 
     let totalClippings = 0;
     books.map((b) => (totalClippings += b.quotes.length));
-    expect(totalClippings).toBe(72);
+    expect(totalClippings).toBe(2);
   });
 
-  test('map every quote', async () => {
+  test("map every quote", async () => {
     const result = await parse(myClippings);
 
-    expect(result[1]).toStrictEqual({
-      title: 'Scrum And Xp From The Trenches',
-      date: '2015-02-21',
-      author: 'Henrik Kniberg',
+    expect(result[0]).toStrictEqual({
+      title: "Four Thousand Weeks",
+      date: "2022-05-24",
+      author: "Burkeman, Oliver",
       quotes: [
         {
-          date: '2015-02-21',
+          date: "2022-05-24",
           quote:
-            'Pair programming does improve code quality. Pair programming does improve team focus (for example when the guy behind you says “hey is that stuff really necessary for this sprint?”). Surprisingly many developers that are strongly against pair programming actually haven’t tried it, and quickly learn to like it once they do try it. Pair programming is exhaustive and should not be done all day. Shifting pairs frequently is good. Pair programming does improve knowledge spread within the group. Surprisingly fast too. Some people just aren’t comfortable with pair programming. Don’t throw out an excellent programmer just because he isn’t comfortable with pair programming. Code review is an OK alternative to pair programming. The “navigator” (the guy not using the keyboard) should have a computer of his own as well. Not for development, but for doing little spikes when necessary, browsing documentation when the “driver” (the guy at the keyboard) gets stuck, etc. Don’t force pair programming upon people. Encourage people and provide the right tools but let them experiment with it at their own pace.',
+            "The cognitive scientist Douglas Hofstadter is famous, among other reasons, for coining ‘Hofstadter’s law’, which states that any task you’re planning to tackle will always take longer than you expect, ‘even when you take into account Hofstadter’s Law’.",
+        },
+        {
+          date: "2022-05-24",
+          quote:
+            "That feature will take at least a week. So let's say two to be safe.",
         },
       ],
     });
   });
 
-  test('parse colon to avoid errors', async () => {
+  test("parse colon to avoid errors", async () => {
     const result = await parse(`hola:hola (pepe)
-- Tu subrayado en la posición 773-774 | Añadido el miércoles, 27 de enero de 2016 20:04:07
+- Your Highlight on page 113 | location 1544-1546 | Added on Tuesday, 24 May 2022 21:27:10
 
 test :    test
 ==========`);
 
     expect(result[0]).toStrictEqual({
-      title: 'hola&#58;hola',
-      date: '2016-01-27',
-      author: 'pepe',
+      title: "hola&#58;hola",
+      date: "2022-05-24",
+      author: "pepe",
       quotes: [
         {
-          date: '2016-01-27',
-          quote: 'test &#58;    test',
+          date: "2022-05-24",
+          quote: "test &#58;    test",
         },
       ],
     });
   });
 
-  test('group by books', async () => {
+  test("group by books", async () => {
     const result = await parse(myClippings);
 
-    expect(result.length).toBe(18);
+    expect(result.length).toBe(1);
   });
 
-  test('set oldest clipping date to book', async () => {
+  test("set oldest clipping date to book", async () => {
     const result = await parse(myClippings);
 
-    expect(result[2].date).toStrictEqual('2016-02-10');
+    expect(result[0].date).toStrictEqual("2022-05-24");
   });
 });

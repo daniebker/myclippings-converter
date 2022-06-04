@@ -52,27 +52,23 @@ describe('markdownBuilder should', () => {
   test('create md files with proper data', () => {
     markdownBuilder(books);
 
-    expect(fs.readFileSync(`${EXPECTED_PATH_1}.md`, 'utf8')).toStrictEqual(
+    expect(fs.readFileSync(`${EXPECTED_PATH_1}.md`, "utf8")).toStrictEqual(
       `---
 title: Scrum And Xp&#58; From The Trenches
 bookauthor: Henrik Kniberg
 date: 2015-02-21
 header:
   teaser: https://some.cover.url/end.jpg
-quotes:
-  - date: 2015-02-21
-    quote: Pair programming does improve code quality&#58; Pair programming does improve team focus...
-  - date: 2015-02-19
-    quote: test
 ---
-## *{{page.bookauthor}}*
 
-<img width="300" src="{{ page.header.teaser }}"/>
+## Henrik Kniberg - Scrum And Xp&#58; From The Trenches
 
-{% for quote in page.quotes reversed %}
-#### {{ quote.date | date: '%B %d, %Y' }}
-{{ quote.quote }}
-{% endfor %}
+<img width="300" src="https://some.cover.url/end.jpg"/>
+
+### 2015-02-21
+> Pair programming does improve code quality&#58; Pair programming does improve team focus...
+### 2015-02-19
+> test
 `
     );
   });
