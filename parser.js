@@ -2,7 +2,7 @@ const axios = require('axios');
 const moment = require('moment');
 
 const SEPARATOR = '==========';
-const INPUT_DATE_FORMAT = 'D [escaped] MMMM [escaped] YYYY H:mm:ss';
+const INPUT_DATE_FORMAT = 'D MMMM YYYY H:mm:ss';
 const OUTPUT_DATE_FORMAT = 'YYYY-MM-DD';
 
 async function parse(input) {
@@ -13,7 +13,6 @@ async function parse(input) {
 
   rawClippings.map((clipping) => {
     const [bookData, data, empty, quote] = clipping.trim().split('\n');
-
     if (quote == null || quote.trim() == '') return;
 
     const datedQuote = {
@@ -51,7 +50,7 @@ async function parse(input) {
 }
 
 function parseColons(input) {
-  return input.replaceAll('#', '&#35').replaceAll(':', '&#58;');
+  return input.replace(/#/g, '&#35').replace(/:/g, '&#58;');
 }
 
 function getDate(data) {
@@ -59,7 +58,7 @@ function getDate(data) {
     const spanishDate = data
       .substring(data.lastIndexOf(',') + 2, data.lenght)
       .trim();
-    return moment(spanishDate, INPUT_DATE_FORMAT, 'es').format(
+    return moment(spanishDate, INPUT_DATE_FORMAT).format(
       OUTPUT_DATE_FORMAT
     );
   }

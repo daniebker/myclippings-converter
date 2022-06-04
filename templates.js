@@ -1,22 +1,36 @@
-exports.bookTemplate = `---
+exports.bookTemplate = {
+  template: `---
 title: {{&title}}
 bookauthor: {{&author}}
 date: {{date}}
 header:
   teaser: {{{coverUrl}}}
-quotes:
-{{#quotes}}
-  - date: {{date}}
-    quote: {{&quote}}
-{{/quotes}}
 ---
-{{=<% %>=}}
-## *{{page.bookauthor}}*
 
-<img width="300" src="{{ page.header.teaser }}"/>
+## {{&author}} - {{&title}}
 
-{% for quote in page.quotes reversed %}
-#### {{ quote.date | date: '%B %d, %Y' }}
-{{ quote.quote }}
-{% endfor %}
-<%={{ }}=%>`;
+<img width="300" src="{{{ coverUrl }}}"/>
+
+{{#quotes}}
+### {{date}}
+> {{&quote}}
+{{/quotes}}
+`, fileExt: 'md'};
+
+exports.orgModeTemplate = {
+  template: `* {{&author}}, {{&title}}
+:PROPERTIES:
+:CREATED: {{date}}
+:TITLE: {{&title}}
+:AUTHOR: {{&author}}
+:END'
+
+{{#quotes}}
+** {{date}}
+#+BEGIN_QUOTE
+{{&quote}}
+#+END_QUOTE
+{{/quotes}}
+`,
+  fileExt: 'org'
+}
