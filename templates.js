@@ -46,7 +46,7 @@ date: {{date}}
 
 {{#quotes}}
 ### {{date}}
-> {{&quote}}
+> {{&quote}}^{{location}}
 {{/quotes}}
 
 `,

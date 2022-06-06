@@ -29,4 +29,8 @@ function orgModeBuilder(books, outputPath = '') {
   renderTemplate(books, outputPath, templates.orgModeTemplate)
 }
 
-module.exports = { markdownBuilder, orgModeBuilder };
+function obsidianModeBuilder(books, outputPath = '') {
+  renderTemplate(books, `${outputPath}-obsidian`, templates.obsidianTemplate)
+}
+
+module.exports = { markdownBuilder, orgModeBuilder, obsidianModeBuilder };

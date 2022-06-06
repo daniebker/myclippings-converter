@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const app = (async () => {
   const parse = require('./parser');
-  const { markdownBuilder, orgModeBuilder } = require('./markdownBuilder');
+  const { markdownBuilder, orgModeBuilder, obsidianModeBuilder } = require('./markdownBuilder');
 
   var fileName = 'My Clippings.txt';
   var outputPath = 'output';
@@ -18,6 +18,7 @@ const app = (async () => {
 
   markdownBuilder(books, outputPath);
   orgModeBuilder(books, outputPath);
+  obsidianModeBuilder(books, outputPath);
 });
 
 app();
