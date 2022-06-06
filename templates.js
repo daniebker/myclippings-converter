@@ -34,3 +34,21 @@ exports.orgModeTemplate = {
 `,
   fileExt: 'org'
 }
+
+exports.obsidianTemplate = {
+  template: `---
+title: {{&title}}
+bookauthor: {{&author}}
+date: {{date}}
+---
+
+### {{ location }}
+
+{{#quotes}}
+### {{date}}
+> {{&quote}}
+{{/quotes}}
+
+`,
+  fileExt: "md",
+};

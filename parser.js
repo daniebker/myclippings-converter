@@ -8,16 +8,17 @@ const OUTPUT_DATE_FORMAT = 'YYYY-MM-DD';
 async function parse(input) {
   const rawClippings = input
     .split(SEPARATOR)
-    .filter((clipping) => clipping != '');
+    .filter((clipping) => clipping != "");
   let books = [];
 
   rawClippings.map((clipping) => {
-    const [bookData, data, empty, quote] = clipping.trim().split('\n');
-    if (quote == null || quote.trim() == '') return;
+    const [bookData, data, empty, quote] = clipping.trim().split("\n");
+    if (quote == null || quote.trim() == "") return;
 
     const datedQuote = {
       quote: parseColons(quote),
       date: getDate(data),
+      location: getLocation(data),
     };
 
     const currentBookTitle = getBookTitle(bookData);
@@ -41,7 +42,7 @@ async function parse(input) {
 
   for (const book of books) {
     const coverUrl = await getCoverUrl(book.title, book.author);
-    if (coverUrl){
+    if (coverUrl) {
       book.coverUrl = coverUrl;
     }
   }
@@ -50,20 +51,27 @@ async function parse(input) {
 }
 
 function parseColons(input) {
-  return input.replace(/#/g, '&#35').replace(/:/g, '&#58;');
+  return input.replace(/#/g, "&#35").replace(/:/g, "&#58;");
 }
 
 function getDate(data) {
   if (data) {
     const spanishDate = data
-      .substring(data.lastIndexOf(',') + 2, data.lenght)
+      .substring(data.lastIndexOf(",") + 2, data.lenght)
       .trim();
-    return moment(spanishDate, INPUT_DATE_FORMAT).format(
-      OUTPUT_DATE_FORMAT
-    );
+    return moment(spanishDate, INPUT_DATE_FORMAT).format(OUTPUT_DATE_FORMAT);
   }
 
-  return '';
+  return "";
+}
+
+function getLocation(data) {
+  const locationPart = data.split("|")[1];
+  let location = "";
+  if (locationPart.includes("location")) {
+    location = data.split("|")[1].replace("location", "").trim();
+  }
+  return location;
 }
 
 function getBookTitle(bookData) {

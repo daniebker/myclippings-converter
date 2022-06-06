@@ -31,11 +31,13 @@ describe("MyClippings parser should", () => {
       quotes: [
         {
           date: "2022-05-24",
+          location: "1544-1546",
           quote:
             "The cognitive scientist Douglas Hofstadter is famous, among other reasons, for coining ‘Hofstadter’s law’, which states that any task you’re planning to tackle will always take longer than you expect, ‘even when you take into account Hofstadter’s Law’.",
         },
         {
           date: "2022-05-24",
+          location: "1794",
           quote:
             "That feature will take at least a week. So let's say two to be safe.",
         },
@@ -57,6 +59,7 @@ test :    test
       quotes: [
         {
           date: "2022-05-24",
+          location: "1544-1546",
           quote: "test &#58;    test",
         },
       ],
@@ -73,5 +76,19 @@ test :    test
     const result = await parse(myClippings);
 
     expect(result[0].date).toStrictEqual("2022-05-24");
+  });
+
+  describe("when there is no location", () => {
+    test("should return an empty string", async () => {
+      const result = await parse(`hola:hola (pepe)
+- Your Highlight on page 113 | Added on Tuesday, 24 May 2022 21:27:10
+
+test :    test
+==========`);
+
+      const quoteOneLocation = result[0].quotes[0].location;
+
+      expect(quoteOneLocation).toBe("");
+    });
   });
 });
